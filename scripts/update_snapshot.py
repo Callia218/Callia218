@@ -20,6 +20,7 @@ from xml.etree import ElementTree
 USER = "Callia218"
 API_ROOT = "https://api.github.com"
 OUTPUT = Path(__file__).resolve().parent.parent / "assets" / "github-snapshot.svg"
+MOBILE_OUTPUT = OUTPUT.with_name("github-snapshot-mobile.svg")
 
 
 def get_json(path: str):
@@ -72,15 +73,39 @@ def make_svg(repos: int, stars: int, followers: int) -> str:
 '''
 
 
+def make_mobile_svg(repos: int, stars: int, followers: int) -> str:
+    repos, stars, followers = (f"{int(value):,}" for value in (repos, stars, followers))
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="380" height="190" viewBox="0 0 380 190" role="img" aria-labelledby="title desc">
+  <title id="title">Callia's GitHub snapshot</title>
+  <desc id="desc">{repos} public repositories, {stars} stars across public repositories, and {followers} followers.</desc>
+  <rect x="1" y="1" width="378" height="188" rx="16" fill="#f5f7ec" stroke="#cad8be" stroke-width="2"/>
+  <path d="M24 65 H356 M127 84 V160 M253 84 V160" stroke="#d7e2cb" stroke-width="1.5"/>
+  <g font-family="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif" fill="#375b42">
+    <text x="24" y="43" font-size="19" font-weight="700">A little snapshot</text>
+    <g text-anchor="middle">
+      <text x="64" y="126" font-size="30" font-weight="700">{repos}</text>
+      <text x="64" y="151" font-size="12" fill="#617a63">public repos</text>
+      <text x="190" y="126" font-size="30" font-weight="700">{stars}</text>
+      <text x="190" y="151" font-size="12" fill="#617a63">stars received</text>
+      <text x="316" y="126" font-size="30" font-weight="700">{followers}</text>
+      <text x="316" y="151" font-size="12" fill="#617a63">followers</text>
+    </g>
+  </g>
+</svg>
+'''
+
+
 def main() -> int:
     try:
         profile = get_json(f"/users/{USER}")
         repositories = get_public_repositories()
         stars = sum(int(repo["stargazers_count"]) for repo in repositories)
-        svg = make_svg(len(repositories), stars, int(profile["followers"]))
-        ElementTree.fromstring(svg)
-        OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-        OUTPUT.write_text(svg, encoding="utf-8", newline="\n")
+        values = (len(repositories), stars, int(profile["followers"]))
+        cards = ((OUTPUT, make_svg(*values)), (MOBILE_OUTPUT, make_mobile_svg(*values)))
+        for path, svg in cards:
+            ElementTree.fromstring(svg)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(svg, encoding="utf-8", newline="\n")
         print(f"Updated {OUTPUT}: {len(repositories)} public repositories, {stars} stars, {profile['followers']} followers")
         return 0
     except (HTTPError, URLError, OSError, ValueError, KeyError, TypeError) as exc:

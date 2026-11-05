@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="190" viewBox="0 0 380 190" role="img" aria-labelledby="title desc">
+  <title id="title">Callia's GitHub snapshot</title>
+  <desc id="desc">10 public repositories, 1 stars across public repositories, and 1 followers.</desc>
+  <rect x="1" y="1" width="378" height="188" rx="16" fill="#f5f7ec" stroke="#cad8be" stroke-width="2"/>
+  <path d="M24 65 H356 M127 84 V160 M253 84 V160" stroke="#d7e2cb" stroke-width="1.5"/>
+  <g font-family="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif" fill="#375b42">
+    <text x="24" y="43" font-size="19" font-weight="700">A little snapshot</text>
+    <g text-anchor="middle">
+      <text x="64" y="126" font-size="30" font-weight="700">10</text>
+      <text x="64" y="151" font-size="12" fill="#617a63">public repos</text>
+      <text x="190" y="126" font-size="30" font-weight="700">1</text>
+      <text x="190" y="151" font-size="12" fill="#617a63">stars received</text>
+      <text x="316" y="126" font-size="30" font-weight="700">1</text>
+      <text x="316" y="151" font-size="12" fill="#617a63">followers</text>
+    </g>
+  </g>
+</svg>

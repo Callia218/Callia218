@@ -31,13 +31,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if git diff --quiet -- assets/github-snapshot.svg; then
-            echo "Snapshot is already up to date."
-            exit 0
-          fi
-          current_sha=$(gh api "repos/${GITHUB_REPOSITORY}/contents/assets/github-snapshot.svg" --jq .sha)
-          gh api --method PUT "repos/${GITHUB_REPOSITORY}/contents/assets/github-snapshot.svg" \
-            -f message='chore: refresh profile snapshot' \
-            -f sha="$current_sha" \
-            -f content="$(base64 -w 0 assets/github-snapshot.svg)" \
-            --silent
+          for card in assets/github-snapshot.svg assets/github-snapshot-mobile.svg; do
+            if git diff --quiet -- "$card"; then
+              echo "$card is already up to date."
+              continue
+            fi
+            current_sha=$(gh api "repos/${GITHUB_REPOSITORY}/contents/${card}" --jq .sha)
+            gh api --method PUT "repos/${GITHUB_REPOSITORY}/contents/${card}" \
+              -f message='chore: refresh profile snapshot' \
+              -f sha="$current_sha" \
+              -f content="$(base64 -w 0 "$card")" \
+              --silent
+          done

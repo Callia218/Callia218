@@ -42,7 +42,10 @@
 ## 🌱 小小记录 · GitHub snapshot
 
 <p align="center">
-  <img src="assets/github-snapshot.svg" alt="GitHub snapshot showing public repositories, stars and followers; the card updates daily." width="100%">
+  <picture>
+    <source media="(max-width: 650px)" srcset="assets/github-snapshot-mobile.svg">
+    <img src="assets/github-snapshot.svg" alt="GitHub snapshot showing public repositories, stars and followers; the card updates daily." width="100%">
+  </picture>
 </p>
 
 <p align="center"><sub>公开数据每天自动更新 · 由 GitHub Actions 生成</sub></p>
