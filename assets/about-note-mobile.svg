@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="428" height="199" viewBox="0 0 428 199" role="img" aria-labelledby="title desc">
+  <title id="title">A little about Callia</title><desc id="desc">Hello, I'm Callia. I enjoy building small tools for automation, bots, iOS and the cloud.</desc>
+  <style>svg{--paper:#f7f5e7;--edge:#c6c9ab;--ink:#514c3e;--tape:#dce8c0;--accent:#819b68;--rule:#ddd9bf}@media(prefers-color-scheme:dark){svg{--paper:#30392e;--edge:#5e6b51;--ink:#f8eedb;--tape:#617651;--accent:#b5ca95;--rule:#4d5a46}}text{font-family:"Segoe Print","Comic Sans MS","Chalkboard SE","Trebuchet MS",sans-serif;fill:var(--ink)}</style>
+  <path d="M17 12 Q108 9 214 11 T410 10 Q422 10 423 25 L423 180 Q422 193 408 193 Q210 190 18 194 Q5 193 5 180 L4 26 Q4 14 17 12Z" fill="var(--paper)" stroke="var(--edge)" stroke-width="1.7"/>
+  <path d="M20 72 H405 M20 100 H405 M20 128 H405 M20 156 H405" fill="none" stroke="var(--rule)" stroke-opacity=".7"/>
+  <path d="M330 11 Q364 7 390 2 L394 8 391 13 394 19 392 25 Q361 29 334 34 L330 29 332 24 329 18Z" fill="var(--tape)"/>
+  <text x="24" y="44" font-size="23" font-weight="700">A little about me</text><path d="M24 50 Q125 54 236 50" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+  <g font-size="20"><text x="24" y="80">Hello, I'm Callia. I enjoy making</text><text x="24" y="108">little tools, exploring bots, iOS,</text><text x="24" y="136">automation &amp; the cloud, and</text><text x="24" y="164">learning along the way.</text></g>
+</svg>

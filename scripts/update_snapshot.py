@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the profile snapshot from GitHub's public REST API.
+"""Generate matching notebook-style cards using public GitHub data.
 
-Only stars on public repositories owned by this account are counted. Forks
-are included in both the public repository and star counts, just as they are
-on the account's public repository page.
+Stars include public repositories owned by Callia218, including forks.
+Language shares count each owned public repository once by its GitHub primary
+language. Repositories with no detected language are excluded from the shares.
 """
 
 from __future__ import annotations
@@ -11,85 +11,97 @@ from __future__ import annotations
 import json
 import os
 import sys
+from collections import Counter
+from html import escape
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 from xml.etree import ElementTree
 
-
 USER = "Callia218"
+ROOT = Path(__file__).resolve().parents[1]
+ASSETS = ROOT / "assets"
 API_ROOT = "https://api.github.com"
-OUTPUT = Path(__file__).resolve().parent.parent / "assets" / "github-snapshot.svg"
-MOBILE_OUTPUT = OUTPUT.with_name("github-snapshot-mobile.svg")
 
 
 def get_json(path: str):
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "User-Agent": f"{USER}-profile-snapshot",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
-    token = os.environ.get("GITHUB_TOKEN")
-    if token:
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": f"{USER}-profile-snapshot", "X-GitHub-Api-Version": "2022-11-28"}
+    if token := os.environ.get("GITHUB_TOKEN"):
         headers["Authorization"] = f"Bearer {token}"
     with urlopen(Request(API_ROOT + path, headers=headers), timeout=20) as response:
         return json.load(response)
 
 
-def get_public_repositories():
+def get_public_repositories() -> list[dict]:
     repositories = []
     for page in range(1, 101):
         batch = get_json(f"/users/{USER}/repos?per_page=100&page={page}&type=owner")
         if not isinstance(batch, list):
-            raise ValueError("Unexpected response while listing public repositories")
+            raise ValueError("Unexpected repository list")
         repositories.extend(batch)
         if len(batch) < 100:
             return repositories
-    raise ValueError("Repository list exceeded the supported pagination limit")
+    raise ValueError("Repository pagination limit exceeded")
 
 
-def make_svg(repos: int, stars: int, followers: int) -> str:
-    # Values are integers, so the only dynamic content is safe to place in XML.
-    repos, stars, followers = (f"{int(value):,}" for value in (repos, stars, followers))
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="880" height="220" viewBox="0 0 880 220" role="img" aria-labelledby="title desc">
-  <title id="title">Callia's GitHub snapshot</title>
-  <desc id="desc">{repos} public repositories, {stars} stars across public repositories, and {followers} followers.</desc>
-  <rect x="2" y="2" width="876" height="216" rx="20" fill="#f5f7ec" stroke="#cad8be" stroke-width="2"/>
-  <path d="M36 76 H844" stroke="#d7e2cb" stroke-width="1.5"/>
-  <path d="M292 100 V190 M586 100 V190" stroke="#d7e2cb" stroke-width="1.5"/>
-  <g font-family="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif" fill="#375b42">
-    <text x="40" y="51" font-size="22" font-weight="700">A little snapshot</text>
-    <text x="840" y="50" text-anchor="end" font-size="13" fill="#617a63">GROWING AT ITS OWN PACE</text>
-    <g text-anchor="middle">
-      <text x="147" y="150" font-size="38" font-weight="700">{repos}</text>
-      <text x="147" y="179" font-size="14" fill="#617a63">public repositories</text>
-      <text x="439" y="150" font-size="38" font-weight="700">{stars}</text>
-      <text x="439" y="179" font-size="14" fill="#617a63">stars received</text>
-      <text x="733" y="150" font-size="38" font-weight="700">{followers}</text>
-      <text x="733" y="179" font-size="14" fill="#617a63">followers</text>
-    </g>
+def language_shares(repositories: list[dict]) -> list[tuple[str, int]]:
+    counts = Counter(repo["language"] for repo in repositories if repo.get("language"))
+    if not counts:
+        return []
+    ordered = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+    grouped = ordered[:3]
+    if len(ordered) > 3:
+        grouped.append(("Other", sum(count for _, count in ordered[3:])))
+    total = sum(count for _, count in grouped)
+    floors = [100 * count // total for _, count in grouped]
+    for index in sorted(range(len(grouped)), key=lambda i: (-(100 * grouped[i][1] % total), i))[:100 - sum(floors)]:
+        floors[index] += 1
+    return [(name, floors[i]) for i, (name, _) in enumerate(grouped)]
+
+
+def card(repos: int, stars: int, followers: int, languages: list[tuple[str, int]], mobile: bool = False) -> str:
+    width, height = (428, 340) if mobile else (880, 188)
+    side_rule = '<path d="M24 166 Q210 163 404 166" stroke="var(--rule)" stroke-dasharray="4 5"/>' if mobile else '<path d="M440 25 Q443 95 440 164" stroke="var(--rule)" stroke-dasharray="4 5"/>'
+    lang_x, lang_y = (24, 190) if mobile else (468, 25)
+    colors = ["var(--green)", "var(--blue)", "var(--gold)", "var(--lilac)"]
+    bars, legends, offset = [], [], 0.0
+    for index, (name, percent) in enumerate(languages):
+        bar_width = 380 * percent / 100
+        bars.append(f'<rect x="{offset:.1f}" y="64" width="{bar_width:.1f}" height="12" fill="{colors[index]}"/>')
+        x = 0 if index % 2 == 0 else 198
+        y = 101 if index < 2 else 127
+        legends.append(f'<circle cx="{x+4}" cy="{y-4}" r="4" fill="{colors[index]}"/><text x="{x+16}" y="{y}" class="label">{escape(name)}</text><text x="{x+181}" y="{y}" text-anchor="end" class="label">{percent}%</text>')
+        offset += bar_width
+    if not languages:
+        legends.append('<text x="0" y="101" class="label">No primary languages yet</text>')
+    desc = f"{stars:,} stars, {followers:,} followers, {repos:,} public repositories. " + ", ".join(f"{name}: {share}%" for name, share in languages)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">
+  <title id="title">Callia's GitHub snapshot</title><desc id="desc">{escape(desc)}</desc>
+  <defs>
+    <style>
+      svg {{ --paper:#faf7e9; --ink:#514a3c; --muted:#6e6a57; --edge:#cac9ae; --rule:#aaa98b; --green:#a0b77e; --blue:#8ebdb8; --gold:#dfc17e; --lilac:#b5a6b5; }}
+      @media (prefers-color-scheme:dark) {{ svg {{ --paper:#2d3028; --ink:#f8eedb; --muted:#dbd4bf; --edge:#5a6650; --rule:#899078; --green:#a8c184; --blue:#86b8b2; --gold:#dfc17e; --lilac:#b5a6b5; }} }}
+      text {{ font-family:"Segoe Print","Comic Sans MS","Chalkboard SE","Trebuchet MS",sans-serif; }}
+      .heading {{ font-size:22px; font-weight:700; fill:var(--ink); }} .caption,.label {{ font-size:13px; fill:var(--muted); }} .value {{ font-size:30px; font-weight:700; fill:var(--ink); }}
+    </style>
+    <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r=".75" fill="var(--rule)" opacity=".25"/></pattern>
+    <clipPath id="bar"><rect x="0" y="64" width="380" height="12" rx="6"/></clipPath>
+  </defs>
+  <rect x="3" y="4" width="{width-6}" height="{height-8}" rx="16" fill="var(--paper)" stroke="var(--edge)" stroke-width="1.7"/>
+  <rect x="5" y="6" width="{width-10}" height="{height-12}" rx="14" fill="url(#dots)"/>
+  <g fill="none" stroke-width="1.4" stroke-linecap="round">{side_rule}</g>
+  <g transform="translate(28 25)">
+    <text x="0" y="21" class="heading">Open source</text><path d="M0 29 Q70 33 152 28" fill="none" stroke="var(--green)" stroke-width="2.4"/>
+    <text x="0" y="47" class="caption">Public GitHub activity</text>
+    <text x="0" y="101" class="value">{stars:,}</text><text x="0" y="127" class="label">Stars received</text>
+    <text x="151" y="101" class="value">{followers:,}</text><text x="151" y="127" class="label">Followers</text>
+    <text x="280" y="101" class="value">{repos:,}</text><text x="280" y="127" class="label">Public repos</text>
   </g>
-</svg>
-'''
-
-
-def make_mobile_svg(repos: int, stars: int, followers: int) -> str:
-    repos, stars, followers = (f"{int(value):,}" for value in (repos, stars, followers))
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="380" height="190" viewBox="0 0 380 190" role="img" aria-labelledby="title desc">
-  <title id="title">Callia's GitHub snapshot</title>
-  <desc id="desc">{repos} public repositories, {stars} stars across public repositories, and {followers} followers.</desc>
-  <rect x="1" y="1" width="378" height="188" rx="16" fill="#f5f7ec" stroke="#cad8be" stroke-width="2"/>
-  <path d="M24 65 H356 M127 84 V160 M253 84 V160" stroke="#d7e2cb" stroke-width="1.5"/>
-  <g font-family="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif" fill="#375b42">
-    <text x="24" y="43" font-size="19" font-weight="700">A little snapshot</text>
-    <g text-anchor="middle">
-      <text x="64" y="126" font-size="30" font-weight="700">{repos}</text>
-      <text x="64" y="151" font-size="12" fill="#617a63">public repos</text>
-      <text x="190" y="126" font-size="30" font-weight="700">{stars}</text>
-      <text x="190" y="151" font-size="12" fill="#617a63">stars received</text>
-      <text x="316" y="126" font-size="30" font-weight="700">{followers}</text>
-      <text x="316" y="151" font-size="12" fill="#617a63">followers</text>
-    </g>
+  <g transform="translate({lang_x} {lang_y})">
+    <text x="0" y="21" class="heading">Primary languages</text><path d="M0 29 Q115 33 244 28" fill="none" stroke="var(--blue)" stroke-width="2.4"/>
+    <text x="0" y="47" class="caption">Share of public repos with a detected language</text>
+    <g clip-path="url(#bar)">{''.join(bars)}</g><rect x="0" y="64" width="380" height="12" rx="6" fill="none" stroke="var(--rule)" stroke-width="1"/>
+    {''.join(legends)}
   </g>
 </svg>
 '''
@@ -100,16 +112,16 @@ def main() -> int:
         profile = get_json(f"/users/{USER}")
         repositories = get_public_repositories()
         stars = sum(int(repo["stargazers_count"]) for repo in repositories)
-        values = (len(repositories), stars, int(profile["followers"]))
-        cards = ((OUTPUT, make_svg(*values)), (MOBILE_OUTPUT, make_mobile_svg(*values)))
-        for path, svg in cards:
+        followers = int(profile["followers"])
+        languages = language_shares(repositories)
+        for filename, mobile in (("github-snapshot.svg", False), ("github-snapshot-mobile.svg", True)):
+            svg = card(len(repositories), stars, followers, languages, mobile)
             ElementTree.fromstring(svg)
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(svg, encoding="utf-8", newline="\n")
-        print(f"Updated {OUTPUT}: {len(repositories)} public repositories, {stars} stars, {profile['followers']} followers")
+            (ASSETS / filename).write_text(svg, encoding="utf-8", newline="\n")
+        print(f"Updated snapshot: {len(repositories)} public repositories, {stars} stars, {followers} followers; languages: {languages}")
         return 0
     except (HTTPError, URLError, OSError, ValueError, KeyError, TypeError) as exc:
-        print(f"Could not update the snapshot: {exc}", file=sys.stderr)
+        print(f"Could not update snapshot: {exc}", file=sys.stderr)
         return 1
 
 

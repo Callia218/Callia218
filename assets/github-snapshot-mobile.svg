@@ -1,17 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="380" height="190" viewBox="0 0 380 190" role="img" aria-labelledby="title desc">
-  <title id="title">Callia's GitHub snapshot</title>
-  <desc id="desc">10 public repositories, 1 stars across public repositories, and 1 followers.</desc>
-  <rect x="1" y="1" width="378" height="188" rx="16" fill="#f5f7ec" stroke="#cad8be" stroke-width="2"/>
-  <path d="M24 65 H356 M127 84 V160 M253 84 V160" stroke="#d7e2cb" stroke-width="1.5"/>
-  <g font-family="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif" fill="#375b42">
-    <text x="24" y="43" font-size="19" font-weight="700">A little snapshot</text>
-    <g text-anchor="middle">
-      <text x="64" y="126" font-size="30" font-weight="700">10</text>
-      <text x="64" y="151" font-size="12" fill="#617a63">public repos</text>
-      <text x="190" y="126" font-size="30" font-weight="700">1</text>
-      <text x="190" y="151" font-size="12" fill="#617a63">stars received</text>
-      <text x="316" y="126" font-size="30" font-weight="700">1</text>
-      <text x="316" y="151" font-size="12" fill="#617a63">followers</text>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="428" height="340" viewBox="0 0 428 340" role="img" aria-labelledby="title desc">
+  <title id="title">Callia's GitHub snapshot</title><desc id="desc">1 stars, 1 followers, 10 public repositories. Python: 57%, JavaScript: 29%, Swift: 14%</desc>
+  <defs>
+    <style>
+      svg { --paper:#faf7e9; --ink:#514a3c; --muted:#6e6a57; --edge:#cac9ae; --rule:#aaa98b; --green:#a0b77e; --blue:#8ebdb8; --gold:#dfc17e; --lilac:#b5a6b5; }
+      @media (prefers-color-scheme:dark) { svg { --paper:#2d3028; --ink:#f8eedb; --muted:#dbd4bf; --edge:#5a6650; --rule:#899078; --green:#a8c184; --blue:#86b8b2; --gold:#dfc17e; --lilac:#b5a6b5; } }
+      text { font-family:"Segoe Print","Comic Sans MS","Chalkboard SE","Trebuchet MS",sans-serif; }
+      .heading { font-size:22px; font-weight:700; fill:var(--ink); } .caption,.label { font-size:13px; fill:var(--muted); } .value { font-size:30px; font-weight:700; fill:var(--ink); }
+    </style>
+    <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r=".75" fill="var(--rule)" opacity=".25"/></pattern>
+    <clipPath id="bar"><rect x="0" y="64" width="380" height="12" rx="6"/></clipPath>
+  </defs>
+  <rect x="3" y="4" width="422" height="332" rx="16" fill="var(--paper)" stroke="var(--edge)" stroke-width="1.7"/>
+  <rect x="5" y="6" width="418" height="328" rx="14" fill="url(#dots)"/>
+  <g fill="none" stroke-width="1.4" stroke-linecap="round"><path d="M24 166 Q210 163 404 166" stroke="var(--rule)" stroke-dasharray="4 5"/></g>
+  <g transform="translate(28 25)">
+    <text x="0" y="21" class="heading">Open source</text><path d="M0 29 Q70 33 152 28" fill="none" stroke="var(--green)" stroke-width="2.4"/>
+    <text x="0" y="47" class="caption">Public GitHub activity</text>
+    <text x="0" y="101" class="value">1</text><text x="0" y="127" class="label">Stars received</text>
+    <text x="151" y="101" class="value">1</text><text x="151" y="127" class="label">Followers</text>
+    <text x="280" y="101" class="value">10</text><text x="280" y="127" class="label">Public repos</text>
+  </g>
+  <g transform="translate(24 190)">
+    <text x="0" y="21" class="heading">Primary languages</text><path d="M0 29 Q115 33 244 28" fill="none" stroke="var(--blue)" stroke-width="2.4"/>
+    <text x="0" y="47" class="caption">Share of public repos with a detected language</text>
+    <g clip-path="url(#bar)"><rect x="0.0" y="64" width="216.6" height="12" fill="var(--green)"/><rect x="216.6" y="64" width="110.2" height="12" fill="var(--blue)"/><rect x="326.8" y="64" width="53.2" height="12" fill="var(--gold)"/></g><rect x="0" y="64" width="380" height="12" rx="6" fill="none" stroke="var(--rule)" stroke-width="1"/>
+    <circle cx="4" cy="97" r="4" fill="var(--green)"/><text x="16" y="101" class="label">Python</text><text x="181" y="101" text-anchor="end" class="label">57%</text><circle cx="202" cy="97" r="4" fill="var(--blue)"/><text x="214" y="101" class="label">JavaScript</text><text x="379" y="101" text-anchor="end" class="label">29%</text><circle cx="4" cy="123" r="4" fill="var(--gold)"/><text x="16" y="127" class="label">Swift</text><text x="181" y="127" text-anchor="end" class="label">14%</text>
   </g>
 </svg>
