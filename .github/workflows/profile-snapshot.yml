@@ -1,0 +1,43 @@
+name: Update profile snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 2 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-snapshot
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Refresh public GitHub numbers
+        run: python scripts/update_snapshot.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit updated snapshot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- assets/github-snapshot.svg; then
+            echo "Snapshot is already up to date."
+            exit 0
+          fi
+          current_sha=$(gh api "repos/${GITHUB_REPOSITORY}/contents/assets/github-snapshot.svg" --jq .sha)
+          gh api --method PUT "repos/${GITHUB_REPOSITORY}/contents/assets/github-snapshot.svg" \
+            -f message='chore: refresh profile snapshot' \
+            -f sha="$current_sha" \
+            -f content="$(base64 -w 0 assets/github-snapshot.svg)" \
+            --silent

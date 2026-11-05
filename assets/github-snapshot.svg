@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="220" viewBox="0 0 880 220" role="img" aria-labelledby="title desc">
+  <title id="title">Callia's GitHub snapshot</title>
+  <desc id="desc">10 public repositories, 1 stars across public repositories, and 1 followers.</desc>
+  <rect x="2" y="2" width="876" height="216" rx="20" fill="#f5f7ec" stroke="#cad8be" stroke-width="2"/>
+  <path d="M36 76 H844" stroke="#d7e2cb" stroke-width="1.5"/>
+  <path d="M292 100 V190 M586 100 V190" stroke="#d7e2cb" stroke-width="1.5"/>
+  <g font-family="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif" fill="#375b42">
+    <text x="40" y="51" font-size="22" font-weight="700">A little snapshot</text>
+    <text x="840" y="50" text-anchor="end" font-size="13" fill="#617a63">GROWING AT ITS OWN PACE</text>
+    <g text-anchor="middle">
+      <text x="147" y="150" font-size="38" font-weight="700">10</text>
+      <text x="147" y="179" font-size="14" fill="#617a63">public repositories</text>
+      <text x="439" y="150" font-size="38" font-weight="700">1</text>
+      <text x="439" y="179" font-size="14" fill="#617a63">stars received</text>
+      <text x="733" y="150" font-size="38" font-weight="700">1</text>
+      <text x="733" y="179" font-size="14" fill="#617a63">followers</text>
+    </g>
+  </g>
+</svg>
