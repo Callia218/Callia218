@@ -26,5 +26,4 @@
     <g clip-path="url(#bar)"><rect x="0.0" y="64" width="216.6" height="12" fill="var(--green)"/><rect x="216.6" y="64" width="110.2" height="12" fill="var(--blue)"/><rect x="326.8" y="64" width="53.2" height="12" fill="var(--gold)"/></g><rect x="0" y="64" width="380" height="12" rx="6" fill="none" stroke="var(--rule)" stroke-width="1"/>
     <circle cx="4" cy="97" r="4" fill="var(--green)"/><text x="16" y="101" class="label">Python</text><text x="181" y="101" text-anchor="end" class="label">57%</text><circle cx="202" cy="97" r="4" fill="var(--blue)"/><text x="214" y="101" class="label">JavaScript</text><text x="379" y="101" text-anchor="end" class="label">29%</text><circle cx="4" cy="123" r="4" fill="var(--gold)"/><text x="16" y="127" class="label">Swift</text><text x="181" y="127" text-anchor="end" class="label">14%</text>
   </g>
-<!-- workflow refresh verification -->
 </svg>
