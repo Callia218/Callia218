@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="428" height="340" viewBox="0 0 428 340" role="img" aria-labelledby="title desc">
-  <title id="title">Callia's GitHub snapshot</title><desc id="desc">1 stars, 1 followers, 11 public repositories. Python: 50%, JavaScript: 25%, Go: 13%, Other: 12%</desc>
+  <title id="title">Callia's GitHub snapshot</title><desc id="desc">1 stars, 1 followers, 11 public repositories. Python: 45%, Go: 22%, JavaScript: 22%, Other: 11%</desc>
   <defs>
     <style>
       svg { --paper:#faf7e9; --ink:#514a3c; --muted:#6e6a57; --edge:#cac9ae; --rule:#aaa98b; --green:#a0b77e; --blue:#8ebdb8; --gold:#dfc17e; --lilac:#b5a6b5; }
@@ -23,7 +23,7 @@
   <g transform="translate(24 190)">
     <text x="0" y="21" class="heading">Primary languages</text><path d="M0 29 Q115 33 244 28" fill="none" stroke="var(--blue)" stroke-width="2.4"/>
     <text x="0" y="47" class="caption">Share of public repos with a detected language</text>
-    <g clip-path="url(#bar)"><rect x="0.0" y="64" width="190.0" height="12" fill="var(--green)"/><rect x="190.0" y="64" width="95.0" height="12" fill="var(--blue)"/><rect x="285.0" y="64" width="49.4" height="12" fill="var(--gold)"/><rect x="334.4" y="64" width="45.6" height="12" fill="var(--lilac)"/></g><rect x="0" y="64" width="380" height="12" rx="6" fill="none" stroke="var(--rule)" stroke-width="1"/>
-    <circle cx="4" cy="97" r="4" fill="var(--green)"/><text x="16" y="101" class="label">Python</text><text x="181" y="101" text-anchor="end" class="label">50%</text><circle cx="202" cy="97" r="4" fill="var(--blue)"/><text x="214" y="101" class="label">JavaScript</text><text x="379" y="101" text-anchor="end" class="label">25%</text><circle cx="4" cy="123" r="4" fill="var(--gold)"/><text x="16" y="127" class="label">Go</text><text x="181" y="127" text-anchor="end" class="label">13%</text><circle cx="202" cy="123" r="4" fill="var(--lilac)"/><text x="214" y="127" class="label">Other</text><text x="379" y="127" text-anchor="end" class="label">12%</text>
+    <g clip-path="url(#bar)"><rect x="0.0" y="64" width="171.0" height="12" fill="var(--green)"/><rect x="171.0" y="64" width="83.6" height="12" fill="var(--blue)"/><rect x="254.6" y="64" width="83.6" height="12" fill="var(--gold)"/><rect x="338.2" y="64" width="41.8" height="12" fill="var(--lilac)"/></g><rect x="0" y="64" width="380" height="12" rx="6" fill="none" stroke="var(--rule)" stroke-width="1"/>
+    <circle cx="4" cy="97" r="4" fill="var(--green)"/><text x="16" y="101" class="label">Python</text><text x="181" y="101" text-anchor="end" class="label">45%</text><circle cx="202" cy="97" r="4" fill="var(--blue)"/><text x="214" y="101" class="label">Go</text><text x="379" y="101" text-anchor="end" class="label">22%</text><circle cx="4" cy="123" r="4" fill="var(--gold)"/><text x="16" y="127" class="label">JavaScript</text><text x="181" y="127" text-anchor="end" class="label">22%</text><circle cx="202" cy="123" r="4" fill="var(--lilac)"/><text x="214" y="127" class="label">Other</text><text x="379" y="127" text-anchor="end" class="label">11%</text>
   </g>
 </svg>
